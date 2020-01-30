@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Member;
-use App\Group;
 
-class MemberController extends Controller
+class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +14,11 @@ class MemberController extends Controller
     public function index()
     {
         //
-		$members = Member::orderBy('name', 'asc')->get();
+        $groups = Group::orderBy('id', 'asc')->get();
 
-		return view('members.index', [
-		    'members' => $members,
-		]);
+        return view('groups.index', [
+            'groups' => $groups,
+        ]);
     }
 
     /**
@@ -31,13 +29,9 @@ class MemberController extends Controller
     public function create()
     {
         //
-		$member = new Member();
-		$groups = Group::pluck('name', 'id');
+        $group = new Group();
 
-		return view('members.create', [
-            'member' => $member,
-            'groups' => $groups,
-		]);
+        
     }
 
     /**
@@ -49,13 +43,6 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         //
-		$member = new Member;
-		$member->fill($request->all());
-		$member->save();
-		
-		$member->groups()->sync($request->get('groups'));
-	
-		return redirect()->route('member.index');
     }
 
     /**
@@ -67,15 +54,6 @@ class MemberController extends Controller
     public function show($id)
     {
         //
-		$member = Member::find($id);
-		if(!$member) throw new ModelNotFoundException;
-		
-		$groups = Group::pluck('name','id');
-	
-		return view('members.show', [
-            'member' => $member,
-            'groups' => $groups,
-		]);
     }
 
     /**
@@ -87,15 +65,6 @@ class MemberController extends Controller
     public function edit($id)
     {
         //
-		$member = Member::find($id);
-		if(!$member) throw new ModelNotFoundException;
-		
-		$groups = Group::pluck('name','id');
-
-		return view('members.edit', [
-            'member' => $member,
-            'groups' => $groups,
-		]);
     }
 
     /**
@@ -108,16 +77,6 @@ class MemberController extends Controller
     public function update(Request $request, $id)
     {
         //
-		$member = Member::find($id);
-		if(!$member) throw new ModelNotFoundException;
-
-		$member->fill($request->all());
-
-		$member->save();
-		
-		$member->groups()->sync($request->get('groups'));
-
-		return redirect()->route('member.index');
     }
 
     /**

@@ -22,4 +22,9 @@ class Common
         '10' => 'Selangor',
         '11' => 'Terengganu',
     ];
+
+    public static $genders = [
+        'M' => 'Male',
+        'F' => 'Female'
+    ];
 }
