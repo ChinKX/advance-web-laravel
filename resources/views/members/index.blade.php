@@ -1,13 +1,12 @@
 <?php
 
-use App\Common;
-use App\Division;
+	use App\Common;
+	use App\Division;
 
 ?>
 @extends('layouts.app')
 
 @section('content')
-
 <!-- Bootstrap Boilerplate... -->
 <div class="panel-body">
 	@if (count($members) > 0)
@@ -87,6 +86,15 @@ use App\Division;
 							'id' => $member->id,
 						]
 					) !!}
+					<!--
+					{!!
+					Form::open(['method' => 'DELETE', 'route' => ['member.destroy', $member->id]]) 
+					!!}
+					{!!
+						Form::submit('Delete')
+					!!}
+					-->
+					<a href="{{ route('member.delete', $member->id) }}">Delete</a>
 					</div>
 				</td>
 			</tr>

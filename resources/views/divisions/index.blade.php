@@ -1,33 +1,30 @@
 <?php
 
-use App\Common;
+	use App\Common;
 
 ?>
 @extends('layouts.app')
 
 @section('content')
-
 <!-- Bootstrap Boilerplate... -->
-
 <div class="panel-body">
-
   @if (count($divisions) > 0)
   <table class="table table-striped task-table">
-  <!-- Table Headings -->
-  <thead>
-    <tr>
-      <th>No.</th>
-      <th>Code</th>
-      <th>Name</th>
-      <th>City</th>
-      <th>State</th>
-      <th>Created</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
+    <!-- Table Headings -->
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
 
-  <!-- Table Body -->
-  <tbody>
+    <!-- Table Body -->
+    <tbody>
     @foreach ($divisions as $i => $division)
     <tr>
       <td class="table-text">
@@ -44,7 +41,6 @@ use App\Common;
         ) !!}
         </div>
       </td>
-
       <td class="table-text">
         <div>{{ $division->name }}</div>
       </td>
@@ -52,7 +48,7 @@ use App\Common;
         <div>{{ $division->city }}</div>
       </td>
       <td class="table-text">
-        <div>{{ Common::$states[$division->state]}}</div>
+        <div>{{ Common::$states[$division->state] }}</div>
       </td>
       <td class="table-text">
         <div>{{ $division->created_at }}</div>
@@ -66,11 +62,20 @@ use App\Common;
             'id' => $division->id,
           ]
         ) !!}
+        |
+        <!--{!!
+        Form::open(['method' => 'DELETE', 'route' => ['division.destroy', $division->id]]) 
+        !!}
+        {!!
+          Form::submit('Delete')
+        !!}
+        -->
+        <a href="{{ route('division.delete', $division->id) }}">Delete</a>
         </div>
       </td>
     </tr>
     @endforeach
-  </tbody>
+    </tbody>
   </table>
   @else
   <div>
@@ -78,5 +83,4 @@ use App\Common;
   </div>
   @endif
 </div>
-
 @endsection

@@ -103,4 +103,19 @@ class DivisionController extends Controller
 
         return redirect()->route('division.index');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+		$division = Division::find($id);
+        $division->delete(); 
+        return redirect()->route('division.index')
+                        ->with('success','Division deleted successfully');
+
+    }
 }

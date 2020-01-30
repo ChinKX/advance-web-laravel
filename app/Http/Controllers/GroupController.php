@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Group;
+use App\Member;
+use DB;
 
 class GroupController extends Controller
 {
@@ -14,11 +17,11 @@ class GroupController extends Controller
     public function index()
     {
         //
-        $groups = Group::orderBy('id', 'asc')->get();
+		$groups = Group::orderBy('name', 'asc')->get();
 
-        return view('groups.index', [
-            'groups' => $groups,
-        ]);
+		return view('groups.index', [
+		    'groups' => $groups
+		]);
     }
 
     /**
@@ -29,9 +32,14 @@ class GroupController extends Controller
     public function create()
     {
         //
-        $group = new Group();
+		$group = new Group();
+		
+		$members = Member::pluck('name','id');
 
-        
+		return view('groups.create', [
+            'group' => $group,
+            'members' => $members,
+		]);
     }
 
     /**
@@ -43,6 +51,13 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         //
+		$group = new Group;
+		$group->fill($request->all());
+		$group->save();
+		
+		$group->members()->sync($request->get('members'));
+	
+		return redirect()->route('group.index');
     }
 
     /**
@@ -54,6 +69,15 @@ class GroupController extends Controller
     public function show($id)
     {
         //
+		$group = Group::find($id);
+		if(!$group) throw new ModelNotFoundException;
+		
+		$members = Member::pluck('name','id');
+	
+		return view('groups.show', [
+            'group' => $group,
+            'members' => $members,
+		]);
     }
 
     /**
@@ -65,6 +89,15 @@ class GroupController extends Controller
     public function edit($id)
     {
         //
+		$group = Group::find($id);
+		if(!$group) throw new ModelNotFoundException;
+		
+		$members = Member::pluck('name','id');
+
+		return view('groups.edit', [
+            'group' => $group,
+            'members' => $members,
+		]);
     }
 
     /**
@@ -77,6 +110,16 @@ class GroupController extends Controller
     public function update(Request $request, $id)
     {
         //
+		$group = Group::find($id);
+		if(!$group) throw new ModelNotFoundException;
+
+		$group->fill($request->all());
+
+		$group->save();
+		
+		$group->members()->sync($request->get('members'));
+
+		return redirect()->route('group.index');
     }
 
     /**
@@ -87,6 +130,12 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        //
+		$group = Group::find($id);
+        $group->delete();
+        $deleted = DB::delete('delete from group_member where group_id = ?', [$id]);
+
+        return redirect()->route('group.index')
+                        ->with('success','Group deleted successfully');
+
     }
 }
