@@ -25,7 +25,7 @@ class Member extends Model
     ];
 
     /**
-    * Get the division that the memberjoined.
+    * Get the division that the member joined.
     */
     public function division()
     {

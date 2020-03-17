@@ -61,7 +61,7 @@ class DivisionController extends Controller
     {
         $division = Division::find($id);
         if(!$division) throw new ModelNotFoundException;
-            
+        
         return view('divisions.show', [
             'division' => $division
         ]);
@@ -116,6 +116,5 @@ class DivisionController extends Controller
         $division->delete(); 
         return redirect()->route('division.index')
                         ->with('success','Division deleted successfully');
-
     }
 }
