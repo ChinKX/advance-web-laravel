@@ -14,6 +14,7 @@ class CreateGroupMemberTable extends Migration
     public function up()
     {
         Schema::create('group_member', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->unsignedInteger('member_id');
             $table->unsignedInteger('group_id');
             $table->foreign('member_id')

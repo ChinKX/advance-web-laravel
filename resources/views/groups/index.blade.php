@@ -4,6 +4,7 @@
 
 ?>
 @extends('layouts.app')
+@include('groups._filters')
 
 @section('content')
 <!-- Bootstrap Boilerplate... -->

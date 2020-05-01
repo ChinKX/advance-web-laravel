@@ -5,6 +5,7 @@
 
 ?>
 @extends('layouts.app')
+@include('members._filters')
 
 @section('content')
 <!-- Bootstrap Boilerplate... -->

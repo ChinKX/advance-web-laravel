@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Member;
 use App\Group;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MemberController extends Controller
 {
@@ -13,13 +14,34 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-		$members = Member::orderBy('name', 'asc')->get();
+        // $members = Member::orderBy('name', 'asc')->get();
+		//$members = Member::simplePaginate(5);
+		//$members = Member::paginate(5);
+		
+		$members = Member::with('division:id,code,name')
+		->when($request->query('membership_no'), function($query) use ($request) {
+		return $query->where('membership_no', $request->query('membership_no'));
+		})
+		->when($request->query('nric'), function($query) use ($request) { 
+			return $query->where('nric', $request->query('nric'));
+		})
+		->when($request->query('name'), function($query) use ($request) { 
+			return $query->where('name', 'like', '%'.$request->query('name').'%');
+		})
+		->when($request->query('gender'), function($query) use ($request) {
+			return $query->where('gender', $request->query('gender'));
+		})
+		->when($request->query('division_id'), function($query) use ($request) {
+			return $query->where('division_id', $request->query('division_id'));
+		})
+		->paginate(5);
+
 
 		return view('members.index', [
-		    'members' => $members,
+            'members' => $members,
+            'request' => $request
 		]);
     }
 

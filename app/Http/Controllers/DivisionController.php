@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Division;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DivisionController extends Controller
 {
@@ -12,13 +13,28 @@ class DivisionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $divisions = Division::orderBy('name', 'asc')->get();
+        // $divisions = Division::orderBy('name', 'asc')->get();
+		//$divisions = Division::simplePaginate(5);
+		//$divisions = Division::paginate(1);
+		
+		$divisions = Division::orderBy('name', 'asc')
+		->when($request->query('code'), function($query) use ($request) {
+			return $query->where('code', 'like', '%'.$request->query('code').'%');
+		})		
+		->when($request->query('name'), function($query) use ($request) { 
+			return $query->where('name', 'like', '%'.$request->query('name').'%');
+		})
+		->when($request->query('state'), function($query) use ($request) {
+			return $query->where('state', $request->query('state'));
+		})
+		->paginate(5);
 
-        return view('divisions.index', [
-            'divisions' => $divisions
-        ]);
+		return view('divisions.index', [
+            'divisions' => $divisions,
+            'request' => $request
+		]);
     }
 
     /**

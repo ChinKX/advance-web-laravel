@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Group;
 use App\Member;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GroupController extends Controller
 {
@@ -14,13 +15,21 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-		$groups = Group::orderBy('name', 'asc')->get();
+        // $groups = Group::orderBy('name', 'asc')->get();
+		//$groups = Group::simplePaginate(5);
+		// $groups = Group::paginate(3);
+		
+		$groups = Group::orderBy('name', 'asc')
+		->when($request->query('name'), function($query) use ($request) { 
+			return $query->where('name', 'like', '%'.$request->query('name').'%');
+		})
+		->paginate(5);
 
 		return view('groups.index', [
-		    'groups' => $groups
+            'groups' => $groups,
+            'request' => $request
 		]);
     }
 

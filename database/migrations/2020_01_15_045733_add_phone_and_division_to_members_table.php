@@ -14,6 +14,7 @@ class AddPhoneAndDivisionToMembersTable extends Migration
     public function up()
     {
         Schema::table('members', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->string('phone', 20)->after('state');
             $table->unsignedInteger('division_id')->after('phone');
             $table->foreign('division_id')
